@@ -24,7 +24,7 @@ d3.json(earthquakes, function(data) {
     createFeatures(data);
 });
 
-//Create the Function to Create the Markers
+//Create the Function to Create the Markers & Legend
 function createFeatures (data) {
     console.log(data);
     //Create a Function to Add Popups
@@ -148,4 +148,39 @@ function createFeatures (data) {
             };
         console.log(feature.properties.mag)}
     }).addTo(myMap);
+
+    //Create a Function to Return Colors Based on Earthquake Magnitude
+    //Method Found at https://gis.stackexchange.com/questions/133630/adding-leaflet-legend
+    function getColors(mag) {
+        return mag==='<0' ? 'gray':
+                mag==='0-1' ? 'purple':
+                mag==='1-2' ? 'blue':
+                mag==='2-3' ? 'green':
+                mag==='3-4' ? 'yellow':
+                mag==='4-5' ? 'orange':
+                                    'red';
+    };
+
+    //Create the Map Legend
+    //Method Found at https://leafletjs.com/examples/choropleth/
+    var legend = L.control({position: 'bottomleft'});
+
+    //Call the Legend Code When the Legend gets Added to the Map
+    legend.onAdd = function(map) {
+
+        //Create a div to Store the Legend
+        var div = L.DomUtil.create('div', 'legend');
+        //Create the Labels for the Legend
+        labels = [];
+        //Create the Groups for the Legend
+        groups = ['<0', '0-1', '1-2', '2-3', '3-4', '4-5', '5+'];
+        
+        //Loop through the Data and Add a Label for Each Colored Square
+        for (var i = 0; i < groups.length; i++) {
+            div.innerHTML += labels.push(`<strong><p style="background-color: ${getColors(groups[i])}; height: 30px; margin: -10px; padding: 0px;">${groups[i]}</p></strong>`);
+        };
+        div.innerHTML = labels.join('<br style="height: 0px">');
+        return div;
+    };
+    legend.addTo(myMap);
 };

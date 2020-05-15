@@ -8,3 +8,11 @@ body,
 html {
   height: 100%;
 }
+
+.legend {
+  background-color: white;
+  height: auto;
+  width: 50px;
+  text-align: center;
+  color: white;
+}
